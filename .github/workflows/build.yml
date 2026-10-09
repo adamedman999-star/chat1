@@ -14,19 +14,10 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      - name: Prepare project
+      - name: Build
         run: |
           unzip -q chat-app.zip
-          cd chat-app
-          npm install
-          npx cap add android
-          npx cap sync android
-          grep -q POST_NOTIFICATIONS android/app/src/main/AndroidManifest.xml || sed -i 's|<application|<uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>\n    <application|' android/app/src/main/AndroidManifest.xml
-      - name: Build APK
-        run: |
-          cd chat-app/android
-          chmod +x gradlew
-          ./gradlew assembleDebug
+          bash chat-app/ci.sh
       - uses: actions/upload-artifact@v4
         with:
           name: chat-apk
